@@ -104,21 +104,6 @@ Performance & Scalability
 * Nginx load balancing
 * Horizontal scaling capabilities
 
-Security Architecture
---------------------
-
-**Defense in Depth:**
-
-- Authentication & Authorization (JWT, 2FA, RBAC)
-- Input Validation & Sanitization
-- SQL Injection Prevention
-- XSS Protection
-- CSRF Protection
-- Rate Limiting
-- Encryption at Rest & in Transit
-- Audit Logging
-- Network Security
-
 
 API Endpoints
 -------------
