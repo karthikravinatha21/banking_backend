@@ -172,6 +172,19 @@ The system is designed for easy development and testing:
 * **CI/CD**: GitHub Actions for automated testing and deployment
 * **Docker**: Development and production Docker environments
 
+Run Tests
+~~~~~~~~~
+
+.. code-block:: bash
+
+    # Run all tests
+    python manage.py test
+    
+    # Run tests with coverage
+    coverage run --source='.' manage.py test
+    coverage report
+    coverage html  # Generate HTML report
+
 Production Deployment
 ---------------------
 
