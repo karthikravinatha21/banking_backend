@@ -23,17 +23,41 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenVerifyView,
 )
-from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
+# from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
+# from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+from rest_framework.documentation import include_docs_urls
+
+# Create the schema view
+schema_view = get_schema_view(
+    openapi.Info(
+        title="Banking API",
+        default_version='v1',
+        description="Test description",
+        terms_of_service="https://www.google.com/policies/terms/",
+        contact=openapi.Contact(email="contact@yourapi.local"),
+        license=openapi.License(name="MIT License"),
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+)
 
 urlpatterns = [
     # Admin
     path('admin/', admin.site.urls),
     
     # API Schema and Documentation
-    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
-    path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    # path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    # path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    # path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+
+    path('api/schema/', schema_view.without_ui(), name='schema'),  # OpenAPI schema
+    path('api/schema/swagger-ui/', schema_view.with_ui('swagger', cache_timeout=0), name='swagger-ui'),  # Swagger UI
+    # path('api/docs/', include_docs_urls(title='Banking System API')),
+
     
     # JWT Authentication
     path('api/auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
