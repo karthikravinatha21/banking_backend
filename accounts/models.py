@@ -31,6 +31,7 @@ class User(AbstractUser):
     # 2FA fields
     is_2fa_enabled = models.BooleanField(default=False)
     backup_tokens = models.JSONField(default=list, blank=True)
+    otp = models.CharField(max_length=4)
     
     # Account status
     is_verified = models.BooleanField(default=False)

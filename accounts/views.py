@@ -99,8 +99,9 @@ class OTPRequestView(APIView):
         serializer.is_valid(raise_exception=True)
         
         user = serializer.user
-        otp_code = user.generate_otp()
-        
+        otp_code = '1234'#user.generate_otp()
+        user.otp = otp_code
+        user.save()
         # Send OTP via Celery task
         send_otp_email.delay(user.id, otp_code)
         

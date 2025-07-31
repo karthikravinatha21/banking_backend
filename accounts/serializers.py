@@ -82,7 +82,7 @@ class OTPVerifySerializer(serializers.Serializer):
     def validate(self, attrs):
         try:
             user = User.objects.get(email=attrs['email'])
-            if not user.verify_otp(attrs['otp']):
+            if not user.otp == attrs['otp']:
                 raise serializers.ValidationError("Invalid or expired OTP")
             attrs['user'] = user
         except User.DoesNotExist:

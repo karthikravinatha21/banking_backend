@@ -42,6 +42,7 @@ THIRD_PARTY_APPS = [
     'django_celery_beat',
     'django_celery_results',
     'drf_yasg',
+    'two_factor',
 ]
 
 LOCAL_APPS = [
@@ -68,8 +69,8 @@ MIDDLEWARE = [
 ]
 
 # if DEBUG:
-    # MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
-    # INSTALLED_APPS.append('debug_toolbar')
+# MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
+# INSTALLED_APPS.append('debug_toolbar')
 
 ROOT_URLCONF = 'banking_system.urls'
 
@@ -225,7 +226,7 @@ EMAIL_PORT = env('EMAIL_PORT', default=587)
 EMAIL_USE_TLS = env('EMAIL_USE_TLS', default=True)
 EMAIL_HOST_USER = env('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='')
-DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='noreply@bankingsystem.com')
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='karthikravinatha@gmail.com')
 
 # Security Settings
 SECURE_BROWSER_XSS_FILTER = True
@@ -373,6 +374,7 @@ SPECTACULAR_SETTINGS = {
 # Debug Toolbar Configuration
 if DEBUG:
     import socket
+
     try:
         hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
         INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
