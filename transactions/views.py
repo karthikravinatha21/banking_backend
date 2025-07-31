@@ -16,7 +16,7 @@ from .serializers import (
     TransactionSerializer, TransferSerializer, TransactionCategorySerializer,
     DepositSerializer, WithdrawSerializer, InternalTransferSerializer,
     ExternalTransferSerializer, ScheduledTransactionSerializer,
-    TransactionLimitSerializer, TransactionHistorySerializer
+    TransactionLimitSerializer, TransactionHistorySerializer, TransactionAnalyticsSerializer
 )
 from accounts.models import Account
 from accounts.permissions import IsOwnerOrAdmin, IsAdminUser, CanPerformTransaction
@@ -210,3 +210,39 @@ class CheckBalanceView(generics.GenericAPIView):
             return Response({"balance": str(balance)}, status=status.HTTP_200_OK)
         except Account.DoesNotExist:
             return Response({"error": "Account not found"}, status=status.HTTP_404_NOT_FOUND)
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAdminUser
+from django.db.models import Sum, Count, Q
+from .models import Transaction
+from .serializers import TransactionAnalyticsSerializer
+class TransactionAnalyticsView(APIView):
+    """
+    API view to provide overall system statistics (for admins).
+    """
+    permission_classes = [IsAdminUser]
+
+    def get(self, request, *args, **kwargs):
+        # Filter the transactions
+        transactions = Transaction.objects.all()
+
+        # Aggregate data from the Transaction model
+        analytics_data = transactions.aggregate(
+            total_transactions=Sum('amount'),
+            total_deposits=Sum('amount', filter=Q(transaction_type='deposit')),
+            total_withdrawals=Sum('amount', filter=Q(transaction_type='withdrawal')),
+            total_fees=Sum('fee_amount'),
+            total_refunds=Sum('amount', filter=Q(transaction_type='refund')),
+            total_interest=Sum('amount', filter=Q(transaction_type='interest')),
+            total_balance_before=Sum('balance_before'),
+            total_balance_after=Sum('balance_after'),
+            total_pending=Count('status', filter=Q(status='pending')),
+            total_completed=Count('status', filter=Q(status='completed')),
+            total_failed=Count('status', filter=Q(status='failed')),
+            total_transactions_by_user=Count('user')
+        )
+
+        # Return aggregated data as a response using the serializer
+        serializer = TransactionAnalyticsSerializer(analytics_data)
+        return Response(serializer.data)

@@ -401,3 +401,17 @@ class TransactionHistorySerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'account_number', 'reference_number',
                             'balance_after', 'created_at')
 
+
+class TransactionAnalyticsSerializer(serializers.Serializer):
+    total_transactions = serializers.DecimalField(max_digits=20, decimal_places=2)
+    total_deposits = serializers.DecimalField(max_digits=20, decimal_places=2)
+    total_withdrawals = serializers.DecimalField(max_digits=20, decimal_places=2)
+    total_fees = serializers.DecimalField(max_digits=20, decimal_places=2)
+    total_refunds = serializers.DecimalField(max_digits=20, decimal_places=2)
+    total_interest = serializers.DecimalField(max_digits=20, decimal_places=2)
+    total_balance_before = serializers.DecimalField(max_digits=20, decimal_places=2)
+    total_balance_after = serializers.DecimalField(max_digits=20, decimal_places=2)
+    total_pending = serializers.IntegerField()
+    total_completed = serializers.IntegerField()
+    total_failed = serializers.IntegerField()
+    total_transactions_by_user = serializers.IntegerField()

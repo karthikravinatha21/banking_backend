@@ -34,5 +34,5 @@ urlpatterns = [
     # path('limits/<int:pk>/', views.TransactionLimitDetailView.as_view(), name='limit-detail'),
     #
     # # Admin Analytics
-    # path('analytics/', views.transaction_analytics, name='transaction-analytics'),
+    path('analytics/', views.TransactionAnalyticsView.as_view(), name='transaction-analytics'),
 ]
