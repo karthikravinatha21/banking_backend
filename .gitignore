@@ -12,7 +12,7 @@ __pycache__/
 
 # Environment variable files
 .env
-.env.*
+#.env.*
 
 # Database
 db.sqlite3
