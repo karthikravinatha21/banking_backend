@@ -1,0 +1,665 @@
+{
+	"info": {
+		"_postman_id": "69525afe-fd52-4eba-80eb-f40d0d27da33",
+		"name": "BANKING",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "39236478",
+		"_collection_link": "https://restless-flare-827311.postman.co/workspace/My-Workspace~b5560f34-5edd-4c79-8a0d-87a1300d34cc/collection/39236478-69525afe-fd52-4eba-80eb-f40d0d27da33?action=share&source=collection_link&creator=39236478"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "User Registration",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"pm.environment.set('token', response.tokens.access);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"internal@example.com\",\n    \"password\": \"secure_password123\",\n    \"password_confirm\": \"secure_password123\",\n    \"first_name\": \"Kart\",\n    \"last_name\": \"R\",\n    \"phone_number\": \"+9196117988836\",\n    \"account_type\": \"SAVINGS\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}/api/auth/register/"
+					},
+					"response": []
+				},
+				{
+					"name": "User Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"pm.environment.set('token', response.tokens.access);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// {\n//     \"email\": \"internal@example.com\",\n//     \"password\": \"secure_password123\"\n// }\n{\n    \"email\": \"superadmin@mnk.com\",\n    \"password\": \"999000\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}/api/auth/login/"
+					},
+					"response": []
+				},
+				{
+					"name": "Two-Factor Authentication",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"qr_code_url\": \"data:image/png;base64,iVBOR...\",\n    \"secret_key\": \"JBSWY3DPEHPK3PXP\",\n    \"backup_codes\": [\n        \"12345678\",\n        \"87654321\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}/api/auth/2fa/enable/"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"secure_password123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}/api/auth/token/"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc1NDUwOTExNSwiaWF0IjoxNzUzOTA0MzE1LCJqdGkiOiJmMjI1MGYzOTUyMGY0MGZhYmExYmJlYjcxNWE1MGVhYyIsInVzZXJfaWQiOjF9.2-VmMaoBfvtmEB4GDEf2hWdtEghQ2eemtpupVB0ivZo\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}/api/auth/token/refresh/"
+					},
+					"response": []
+				},
+				{
+					"name": "Verify",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc1NDUwOTMyNiwiaWF0IjoxNzUzOTA0NTI2LCJqdGkiOiJiZDE1MDZjYjhmZTU0ZDY1OTkwN2UzNzBhZWE1OTY4NCIsInVzZXJfaWQiOjF9.v2wRktBUH3ZFAmu-u_LfxJ1B1YpHA_L9tkhNaxyRDXM\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}/api/auth/token/verify/"
+					},
+					"response": []
+				},
+				{
+					"name": "Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{baseurl}}/api/profile/"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Account",
+			"item": [
+				{
+					"name": "List",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{baseurl}}/api/accounts/"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Secondary Account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"account_type\": \"savings\",\n    \"currency\": 23,\n    \"user_email\": \"user5@example.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}/api/accounts/"
+					},
+					"response": []
+				},
+				{
+					"name": "Account Details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{baseurl}}/api/accounts/4f67b109-72e8-4f24-a7ea-6d02049a92c6"
+					},
+					"response": []
+				},
+				{
+					"name": "Batch Account Creation",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n          \"accounts\": [\n              {\n                  \"account_type\": \"savings\",\n                  \"currency\": 23,\n                  \"user_email\": \"user3@example.com\"\n              },\n              {\n                  \"account_type\": \"checking\",\n                  \"currency\": 24,\n                  \"user_email\": \"user3@example.com\"\n              }\n          ]\n      }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}/api/accounts/batch-create/"
+					},
+					"response": []
+				},
+				{
+					"name": "Account Summary",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{baseurl}}/api/accounts/summary/"
+					},
+					"response": []
+				},
+				{
+					"name": "Account Statement",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"start_date\": \"2025-01-01\",\n    \"end_date\": \"2025-01-01\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}/api/accounts/c8a5f38b-a6e1-4826-aa9b-b77740e5b29d/statement/"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Deposit",
+			"item": [
+				{
+					"name": "Deposit",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"account_id\": \"c8a5f38b-a6e1-4826-aa9b-b77740e5b29d\",\n    \"amount\": \"1000.00\",\n    \"description\": \"Salary deposit\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}/api/transactions/deposit/"
+					},
+					"response": []
+				},
+				{
+					"name": "Withdrawal",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"account_id\": \"c8a5f38b-a6e1-4826-aa9b-b77740e5b29d\",\n    \"amount\": \"50.00\",\n    \"description\": \"ATM withdrawal\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}/api/transactions/withdraw/"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transactions",
+			"item": [
+				{
+					"name": "Internal Transfer",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from_account_id\": \"c8a5f38b-a6e1-4826-aa9b-b77740e5b29d\",\n    \"to_account_id\": \"4f67b109-72e8-4f24-a7ea-6d02049a92c6\",\n    \"amount\": \"10.00\",\n    \"description\": \"Transfer to savings\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}/api/transactions/transfer/internal/"
+					},
+					"response": []
+				},
+				{
+					"name": "External Transfer",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from_account_id\": \"c8a5f38b-a6e1-4826-aa9b-b77740e5b29d\",\n    \"to_account_number\": \"AC539385040F95EE48\",\n    \"to_bank_code\": \"BANK123\",\n    \"bank_code\": \"BANK123\",\n    \"beneficiary_name\": \"Jane Doe\",\n    \"amount\": \"3.00\",\n    \"description\": \"Payment to vendor\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}/api/transactions/transfer/external/"
+					},
+					"response": []
+				},
+				{
+					"name": "History",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/transactions/history/?transaction_type=deposit&status=completed&date_from=2025-01-01&date_to=2025-07-31&page=1&page_size=1",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"transactions",
+								"history",
+								""
+							],
+							"query": [
+								{
+									"key": "account",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "transaction_type",
+									"value": "deposit"
+								},
+								{
+									"key": "status",
+									"value": "completed"
+								},
+								{
+									"key": "date_from",
+									"value": "2025-01-01"
+								},
+								{
+									"key": "date_to",
+									"value": "2025-07-31"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "page_size",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Transaction Detail",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{baseurl}}/api/transactions/adc5c0ca-4f10-4d30-9811-6f7f69a72849"
+					},
+					"response": []
+				},
+				{
+					"name": "Analytics",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{baseurl}}/api/transactions/analytics/"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Currency",
+			"item": [
+				{
+					"name": "Currency List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseurl}}/api/currency/currencies/"
+					},
+					"response": []
+				},
+				{
+					"name": "Currency Detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseurl}}/api/currency/currencies/EUR"
+					},
+					"response": []
+				},
+				{
+					"name": "Exchange Rate",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseurl}}/api/currency/rates/"
+					},
+					"response": []
+				},
+				{
+					"name": "Convert Currency",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from_currency\": \"USD\",\n    \"to_currency\": \"EUR\",\n    \"amount\": \"1.00\"\n}\n\n// {\n//     \"from_currency\": \"USD\",\n//     \"to_currency\": \"GBP\",\n//     \"amount\": \"1.00\"\n// }\n\n// {\n//     \"from_currency\": \"GBP\",\n//     \"to_currency\": \"USD\",\n//     \"amount\": \"1.00\"\n// }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}/api/currency/convert/"
+					},
+					"response": []
+				},
+				{
+					"name": "Cached Exchange Rate",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseurl}}/api/currency/rates/USD/EUR"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "MFA",
+			"item": [
+				{
+					"name": "Send OTP",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"user@example.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}/api/otp/request/"
+					},
+					"response": []
+				},
+				{
+					"name": "Verify OTP",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"user@example.com\",\n    \"otp\": \"1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}/api/otp/verify/"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Roles",
+			"item": [
+				{
+					"name": "Roles List",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{baseurl}}/api/roles"
+					},
+					"response": []
+				},
+				{
+					"name": "Detail",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{baseurl}}/api/roles/5"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Stats",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{token}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{baseurl}}/api/admin/stats/"
+			},
+			"response": []
+		}
+	]
+}

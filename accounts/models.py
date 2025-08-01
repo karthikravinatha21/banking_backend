@@ -10,6 +10,16 @@ from core.models import TimeStampedModel, Currency
 import uuid
 from decimal import Decimal
 
+class Tenant(models.Model):
+    is_active = models.BooleanField(default=True)
+    name = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name_plural = "tenant"
+        ordering = ['id']
+
+    def __str__(self):
+        return self.name
 
 class UserRole(TimeStampedModel):
     """
@@ -35,11 +45,11 @@ class UserRole(TimeStampedModel):
     def __str__(self):
         return self.get_name_display()
 
-
 class User(AbstractUser):
     """
     Custom User model with additional fields for banking system.
     """
+    tenant = models.ManyToManyField(Tenant, related_name='users', null=True, blank=True)
     email = models.EmailField(unique=True)
     phone_regex = RegexValidator(
         regex=r'^\+?1?\d{9,15}$',

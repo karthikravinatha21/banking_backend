@@ -91,11 +91,30 @@ class OTPVerifySerializer(serializers.Serializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    tenant_list = serializers.SerializerMethodField()
+    role = serializers.SerializerMethodField()
+    # permission_list = serializers.SerializerMethodField()
     class Meta:
         model = User
         fields = ('id', 'email', 'first_name', 'last_name', 'phone_number',
-                  'is_active', 'date_joined', 'timezone', 'last_login')
+                  'is_active', 'tenant_list', 'role', 'date_joined', 'timezone', 'last_login')
         read_only_fields = ('id', 'date_joined', 'last_login')
+
+    def get_tenant_list(self, obj):
+        tenant_ids = obj.tenant.all()
+        return [{'id': tenant.id, 'name': tenant.name} for tenant in tenant_ids]
+
+    def get_role(self, obj):
+        """Serialize the roles (groups) of the user"""
+        data = obj.role
+        return {'role_id': data.id, 'role_name': data.name}
+        # return [{'role_id': group.id, 'role_name': group.name} for group in obj.role]
+
+    # def get_permission_list(self, obj):
+    #     """Serialize the permissions assigned to the user"""
+    #     permissions = obj.user_permissions.all()
+    #     return [{'permission_id': permission.id, 'permission_codename': permission.codename,
+    #              'permission_name': permission.name} for permission in permissions]
 
 
 class AccountSerializer(serializers.ModelSerializer):
