@@ -9,8 +9,8 @@ from django_ratelimit.decorators import ratelimit
 from django.utils.decorators import method_decorator
 from django.db.models import Count, Sum, Avg
 from decimal import Decimal
+from django.views.decorators.cache import cache_page
 
-# from .models import CurrencyConversion
 from .serializers import (
     CurrencySerializer, ExchangeRateSerializer, CurrencyConversionSerializer,
     ConvertCurrencySerializer, ExchangeRateUpdateSerializer, CurrencyTransferSerializer
@@ -28,12 +28,20 @@ class CurrencyListView(generics.ListAPIView):
     serializer_class = CurrencySerializer
     permission_classes = [permissions.AllowAny]  # Public endpoint for currency list
 
+    @method_decorator(cache_page(60 * 10))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
 
 class CurrencyDetailView(generics.RetrieveAPIView):
     queryset = Currency.objects.filter(is_active=True)
     serializer_class = CurrencySerializer
     permission_classes = [permissions.AllowAny]
     lookup_field = 'code'
+
+    @method_decorator(cache_page(60 * 10))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
 class ExchangeRateListView(generics.ListAPIView):

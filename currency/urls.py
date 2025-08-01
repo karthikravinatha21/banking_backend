@@ -15,7 +15,5 @@ urlpatterns = [
     # Currency Conversion
     path('convert/', views.CurrencyConvertView.as_view(), name='currency-convert'),
     path('calculator/', views.currency_conversion_calculator, name='conversion-calculator'),
-    
-    # Utility Endpoints
-    # path('supported/', views.supported_currencies, name='supported-currencies'),
+
 ]
