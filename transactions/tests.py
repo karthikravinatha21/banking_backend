@@ -25,6 +25,7 @@ class TransactionCategoryModelTest(TestCase):
         self.assertEqual(self.category.description, 'Money transfer transactions')
         self.assertTrue(self.category.is_active)
 
+
     def test_category_str_representation(self):
         """Test category string representation."""
         self.assertEqual(str(self.category), 'Transfer')

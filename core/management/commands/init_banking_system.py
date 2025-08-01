@@ -6,6 +6,8 @@ from accounts.models import UserRole, User
 import logging
 from django.contrib.auth.models import Permission
 
+from transactions.models import TransactionCategory
+
 logger = logging.getLogger(__name__)
 
 
@@ -31,8 +33,9 @@ class Command(BaseCommand):
             if not options['skip_currencies']:
                 self.create_currencies()
                 self.create_exchange_rates()
-                self.create_superuser()
-            
+                # self.create_superuser()
+                self.create_transaction_category()
+
             if not options['skip_roles']:
                 self.create_user_roles()
         
@@ -249,4 +252,12 @@ class Command(BaseCommand):
             print(f"Superuser {user.username} created successfully with email {user.email}")
         except:
             print(f'Already user exists!')
+
+    def create_transaction_category(self):
+        TransactionCategory.objects.create(name='Deposit',description='description',is_active=True)
+        TransactionCategory.objects.create(name='Withdrawal',description='description',is_active=True)
+        TransactionCategory.objects.create(name='Transfer',description='description',is_active=True)
+        TransactionCategory.objects.create(name='Payment',description='description',is_active=True)
+        TransactionCategory.objects.create(name='Adjustment',description='description',is_active=True)
+
 
