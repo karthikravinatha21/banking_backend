@@ -50,13 +50,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     
     # API Schema and Documentation
-    # path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-    # path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
-    # path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
-
     path('api/schema/', schema_view.without_ui(), name='schema'),  # OpenAPI schema
     path('api/schema/swagger-ui/', schema_view.with_ui('swagger', cache_timeout=0), name='swagger-ui'),  # Swagger UI
-    # path('api/docs/', include_docs_urls(title='Banking System API')),
 
     
     # JWT Authentication

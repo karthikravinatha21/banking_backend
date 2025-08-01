@@ -29,11 +29,6 @@ RUN mkdir -p /app/staticfiles /app/media
 # Collect static files
 RUN python manage.py collectstatic --noinput
 
-# Create user for running the application
-RUN adduser --disabled-password --gecos '' appuser
-RUN chown -R appuser:appuser /app
-USER appuser
-
 # Expose port
 EXPOSE 8000
 

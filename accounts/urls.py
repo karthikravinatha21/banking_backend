@@ -20,7 +20,7 @@ urlpatterns = [
     path('accounts/<uuid:pk>/', views.AccountDetailView.as_view(), name='account-detail'),
     path('accounts/batch-create/', views.BatchAccountCreateView.as_view(), name='batch-account-create'),
     path('accounts/summary/', views.user_accounts_summary, name='accounts-summary'),
-    path('accounts/<int:account_id>/statement/', views.request_account_statement, name='account-statement'),
+    path('accounts/<uuid:account_id>/statement/', views.request_account_statement, name='account-statement'),
     
     # Role Management URLs
     path('roles/', views.UserRoleListCreateView.as_view(), name='role-list-create'),

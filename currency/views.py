@@ -97,8 +97,7 @@ def get_cached_exchange_rate(request, from_currency, to_currency):
             'cached': False,
             'timestamp': timezone.now()
         })
-    
-    # Check cache first
+
     cache_key = f'exchange_rate_{from_currency}_{to_currency}'
     cached_rate = cache.get(cache_key)
     
@@ -112,7 +111,7 @@ def get_cached_exchange_rate(request, from_currency, to_currency):
             'timestamp': cached_rate['timestamp']
         })
     
-    # Get from database
+
     try:
         exchange_rate = ExchangeRate.objects.get(
             from_currency__code=from_currency,
@@ -125,7 +124,6 @@ def get_cached_exchange_rate(request, from_currency, to_currency):
             'timestamp': timezone.now()
         }
     except ExchangeRate.DoesNotExist:
-        # Try reverse conversion
         try:
             exchange_rate = ExchangeRate.objects.get(
                 from_currency__code=to_currency,
@@ -142,8 +140,7 @@ def get_cached_exchange_rate(request, from_currency, to_currency):
                 {'error': f'Exchange rate not found for {from_currency} to {to_currency}'},
                 status=status.HTTP_404_NOT_FOUND
             )
-    
-    # Cache for 5 minutes
+
     cache.set(cache_key, rate_data, 300)
     
     return Response({
