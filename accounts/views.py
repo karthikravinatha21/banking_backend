@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404
 from django_ratelimit.decorators import ratelimit
 from django.utils.decorators import method_decorator
 
+from core.constants import ACCOUNT_ACTIVE_STATUS
 from .models import User, Account, UserRole, UserRoleAssignment, AccountHold
 from .serializers import (
     UserRegistrationSerializer, UserLoginSerializer, UserSerializer,
@@ -281,7 +282,11 @@ class AccountHoldDetailView(generics.RetrieveUpdateDestroyAPIView):
 def user_accounts_summary(request):
     """Get summary of user's accounts"""
     user = request.user
-    accounts = Account.objects.filter(user=user, is_active=True)
+    if user.is_staff:
+        return Response(
+            {'error': 'Access Denied'}, status=status.HTTP_400_BAD_REQUEST
+        )
+    accounts = Account.objects.filter(user=user, status=ACCOUNT_ACTIVE_STATUS)
     
     summary = {
         'total_accounts': accounts.count(),
@@ -289,7 +294,7 @@ def user_accounts_summary(request):
         'accounts_by_type': {},
         'accounts_by_currency': {}
     }
-    
+
     for account in accounts:
         # Group by account type
         if account.account_type not in summary['accounts_by_type']:
@@ -299,16 +304,17 @@ def user_accounts_summary(request):
             }
         summary['accounts_by_type'][account.account_type]['count'] += 1
         summary['accounts_by_type'][account.account_type]['total_balance'] += account.balance
-        
-        # Group by currency
-        if account.currency not in summary['accounts_by_currency']:
-            summary['accounts_by_currency'][account.currency] = {
+
+        # Group by currency - Use currency code or name to make it serializable
+        currency_key = str(account.currency.code)  # Use the currency code or name
+        if currency_key not in summary['accounts_by_currency']:
+            summary['accounts_by_currency'][currency_key] = {
                 'count': 0,
                 'total_balance': 0
             }
-        summary['accounts_by_currency'][account.currency]['count'] += 1
-        summary['accounts_by_currency'][account.currency]['total_balance'] += account.balance
-    
+        summary['accounts_by_currency'][currency_key]['count'] += 1
+        summary['accounts_by_currency'][currency_key]['total_balance'] += account.balance
+
     return Response(summary)
 
 
@@ -351,11 +357,11 @@ def request_account_statement(request, account_id):
 def system_stats(request):
     """Get system statistics for admin dashboard"""
     stats = {
-        'total_users': User.objects.count(),
-        'active_users': User.objects.filter(is_active=True).count(),
+        'total_users': User.objects.filter(is_staff=False).count(),
+        'active_users': User.objects.filter(is_active=True, is_staff=False).count(),
         'total_accounts': Account.objects.count(),
-        'active_accounts': Account.objects.filter(is_active=True).count(),
-        'total_balance': sum(account.balance for account in Account.objects.filter(is_active=True)),
+        'active_accounts': Account.objects.filter(status=ACCOUNT_ACTIVE_STATUS).count(),
+        'total_balance': sum(account.balance for account in Account.objects.filter(status=ACCOUNT_ACTIVE_STATUS)),
         'users_by_date': {},
         'accounts_by_type': {}
     }
@@ -370,7 +376,7 @@ def system_stats(request):
         stats['users_by_date'][date_key] = stats['users_by_date'].get(date_key, 0) + 1
     
     # Accounts by type
-    for account in Account.objects.filter(is_active=True):
+    for account in Account.objects.filter(status=ACCOUNT_ACTIVE_STATUS):
         account_type = account.account_type
         if account_type not in stats['accounts_by_type']:
             stats['accounts_by_type'][account_type] = {

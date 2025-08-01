@@ -9,8 +9,8 @@ from django_ratelimit.decorators import ratelimit
 from django.utils.decorators import method_decorator
 from django.db.models import Count, Sum, Avg
 from decimal import Decimal
+from django.views.decorators.cache import cache_page
 
-# from .models import CurrencyConversion
 from .serializers import (
     CurrencySerializer, ExchangeRateSerializer, CurrencyConversionSerializer,
     ConvertCurrencySerializer, ExchangeRateUpdateSerializer, CurrencyTransferSerializer
@@ -28,12 +28,20 @@ class CurrencyListView(generics.ListAPIView):
     serializer_class = CurrencySerializer
     permission_classes = [permissions.AllowAny]  # Public endpoint for currency list
 
+    @method_decorator(cache_page(60 * 10))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
 
 class CurrencyDetailView(generics.RetrieveAPIView):
     queryset = Currency.objects.filter(is_active=True)
     serializer_class = CurrencySerializer
     permission_classes = [permissions.AllowAny]
     lookup_field = 'code'
+
+    @method_decorator(cache_page(60 * 10))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
 class ExchangeRateListView(generics.ListAPIView):
@@ -89,8 +97,7 @@ def get_cached_exchange_rate(request, from_currency, to_currency):
             'cached': False,
             'timestamp': timezone.now()
         })
-    
-    # Check cache first
+
     cache_key = f'exchange_rate_{from_currency}_{to_currency}'
     cached_rate = cache.get(cache_key)
     
@@ -104,7 +111,7 @@ def get_cached_exchange_rate(request, from_currency, to_currency):
             'timestamp': cached_rate['timestamp']
         })
     
-    # Get from database
+
     try:
         exchange_rate = ExchangeRate.objects.get(
             from_currency__code=from_currency,
@@ -117,7 +124,6 @@ def get_cached_exchange_rate(request, from_currency, to_currency):
             'timestamp': timezone.now()
         }
     except ExchangeRate.DoesNotExist:
-        # Try reverse conversion
         try:
             exchange_rate = ExchangeRate.objects.get(
                 from_currency__code=to_currency,
@@ -134,8 +140,7 @@ def get_cached_exchange_rate(request, from_currency, to_currency):
                 {'error': f'Exchange rate not found for {from_currency} to {to_currency}'},
                 status=status.HTTP_404_NOT_FOUND
             )
-    
-    # Cache for 5 minutes
+
     cache.set(cache_key, rate_data, 300)
     
     return Response({

@@ -11,6 +11,31 @@ import uuid
 from decimal import Decimal
 
 
+class UserRole(TimeStampedModel):
+    """
+    Custom role model for role-based access control.
+    """
+    ROLE_CHOICES = [
+        ('admin', 'Administrator'),
+        ('manager', 'Manager'),
+        ('teller', 'Teller'),
+        ('customer', 'Customer'),
+        ('support', 'Support'),
+    ]
+
+    name = models.CharField(max_length=50, choices=ROLE_CHOICES, unique=True)
+    description = models.TextField(blank=True)
+    permissions = models.ManyToManyField(Permission, blank=True)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = 'User Role'
+        verbose_name_plural = 'User Roles'
+
+    def __str__(self):
+        return self.get_name_display()
+
+
 class User(AbstractUser):
     """
     Custom User model with additional fields for banking system.
@@ -49,6 +74,7 @@ class User(AbstractUser):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     last_login_ip = models.GenericIPAddressField(null=True, blank=True)
+    role = models.ForeignKey(UserRole, on_delete=models.SET_NULL, null=True, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
@@ -63,31 +89,6 @@ class User(AbstractUser):
 
     def get_full_name(self):
         return f"{self.first_name} {self.last_name}".strip()
-
-
-class UserRole(TimeStampedModel):
-    """
-    Custom role model for role-based access control.
-    """
-    ROLE_CHOICES = [
-        ('admin', 'Administrator'),
-        ('manager', 'Manager'),
-        ('teller', 'Teller'),
-        ('customer', 'Customer'),
-        ('support', 'Support'),
-    ]
-    
-    name = models.CharField(max_length=50, choices=ROLE_CHOICES, unique=True)
-    description = models.TextField(blank=True)
-    permissions = models.ManyToManyField(Permission, blank=True)
-    is_active = models.BooleanField(default=True)
-
-    class Meta:
-        verbose_name = 'User Role'
-        verbose_name_plural = 'User Roles'
-
-    def __str__(self):
-        return self.get_name_display()
 
 
 class UserRoleAssignment(TimeStampedModel):
