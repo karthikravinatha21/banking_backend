@@ -1,4 +1,6 @@
 from django.contrib import admin
+
+from accounts.models import Tenant
 from .models import Currency, ExchangeRate
 
 
@@ -9,6 +11,13 @@ class CurrencyAdmin(admin.ModelAdmin):
     search_fields = ('code', 'name')
     readonly_fields = ('created_at', 'updated_at')
     ordering = ('code',)
+
+@admin.register(Tenant)
+class TenantAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name')
+    search_fields = ('name',)
+    ordering = ('name',)
+
 
 
 @admin.register(ExchangeRate)

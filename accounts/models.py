@@ -11,8 +11,12 @@ import uuid
 from decimal import Decimal
 
 class Tenant(models.Model):
-    tenant_id = models.CharField(max_length=50, unique=True)
+    is_active = models.BooleanField(default=True)
     name = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name_plural = "tenant"
+        ordering = ['id']
 
     def __str__(self):
         return self.name
