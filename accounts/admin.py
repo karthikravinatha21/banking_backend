@@ -18,10 +18,9 @@ class UserAdmin(BaseUserAdmin):
         (None, {'fields': ('email', 'password')}),
         ('Personal info', {'fields': ('first_name', 'last_name', 'phone_number', 'timezone')}),
         ('Permissions', {
-            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
+            'fields': ('is_active', 'is_staff', 'is_superuser', 'role', 'user_permissions'),
         }),
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
-        ('2FA', {'fields': ('otp_code', 'otp_created_at')}),
     )
     
     add_fieldsets = (
@@ -54,7 +53,7 @@ class AccountAdmin(admin.ModelAdmin):
             'fields': ('balance',)
         }),
         ('Status', {
-            'fields': ('is_active',)
+            'fields': ('status',)
         }),
         ('Timestamps', {
             'fields': ('created_at', 'updated_at'),
